@@ -20,3 +20,10 @@ class Relu:
     def forward(self, x):
         self.output = np.maximum(0, x)
         return self.output
+
+
+class  Softmax:
+    def forward(self, x):
+        epowerx = np.exp(x - np.max(x, axis=1, keepdims=True))
+        self.output = epowerx / np.sum(epowerx, axis=1, keepdims=True)
+        return self.output
