@@ -12,14 +12,17 @@ class Dense:
         self.output = np.dot(x, self.weights) + self.bias
         return self.output
     
-    def backprop(self):
-        pass
+    def backward(self, derivatives):
+        self.prev_devrivatives = derivatives.deepcopy()
 
 
 class Relu:
     def forward(self, x):
         self.output = np.maximum(0, x)
         return self.output
+    
+    def backward(self, derivatives):
+        self.prev_devrivatives = derivatives.deepcopy()
 
 
 class  Softmax:
@@ -27,3 +30,6 @@ class  Softmax:
         epowerx = np.exp(x - np.max(x, axis=1, keepdims=True))
         self.output = epowerx / np.sum(epowerx, axis=1, keepdims=True)
         return self.output
+    
+    def backward(self, derivatives):
+        self.prev_devrivatives = derivatives.deepcopy()
