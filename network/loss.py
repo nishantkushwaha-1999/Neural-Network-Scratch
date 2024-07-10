@@ -22,3 +22,17 @@ class CategoricalCrossEntropy(Loss):
         
         neglogloss = -np.log(pred_confidence)
         return neglogloss
+    
+    def derivative_self(self, output, y_true):
+        n_samples = len(output)
+        n_labels = len(output[0])
+        
+        if len(y_true.shape) == 1:
+            y_true = np.eye(n_labels)[y_true]
+        
+        d_inputs = - y_true / output
+        return d_inputs / n_samples
+    
+    def backward(self, probabilities, y_true):
+        self.d_inputs = self.derivative_self(probabilities, y_true)
+        return self.d_inputs
