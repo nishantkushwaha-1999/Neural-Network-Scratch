@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from matplotlib.colors import LinearSegmentedColormap
 
-def visualize_model_decision_boundaries(model, X, y, c_colors: list, magnification=0.01, title="Title plot", ax=None):
+def visualize_model_decision_boundaries(model, X, y, c_colors: list, magnification=0.01, title="Title plot", ax=None,
+                                        alpha=0.7):
     if len(y.shape) > 1:
         raise ValueError(f"y is supposed to be a vector")
     
@@ -40,6 +41,6 @@ def visualize_model_decision_boundaries(model, X, y, c_colors: list, magnificati
         ax.contourf(xx, 
                      yy, 
                      proba_[:, i].reshape(xx.shape),
-                     cmap=LinearSegmentedColormap.from_list("", [ mcolors.to_rgba(c_colors[i], alpha=0), mcolors.to_rgba(c_colors[i], alpha=0.5) ]),
+                     cmap=LinearSegmentedColormap.from_list("", [ mcolors.to_rgba(c_colors[i], alpha=0), mcolors.to_rgba(c_colors[i], alpha=alpha) ]),
                      antialiased=True,
                      extend='min')

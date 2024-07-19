@@ -1,4 +1,6 @@
 network/__pycache__
+utils/__pycache__
+media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
