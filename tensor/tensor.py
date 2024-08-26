@@ -31,7 +31,7 @@ class Tensor:
         return out
     
     def relu(self):
-        out = Tensor(max(0, self.data), (self,), 'reul', label='relu')
+        out = Tensor(max(0, self.data), (self,), 'relu', label='relu')
 
         def _backward():
             self.grad += out.grad * (1 if out.data > 0 else 0)
