@@ -1,4 +1,5 @@
 import numpy as np
+from graphviz import Digraph
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from matplotlib.colors import LinearSegmentedColormap
@@ -44,3 +45,36 @@ def visualize_model_decision_boundaries(model, X, y, c_colors: list, magnificati
                      cmap=LinearSegmentedColormap.from_list("", [ mcolors.to_rgba(c_colors[i], alpha=0), mcolors.to_rgba(c_colors[i], alpha=alpha) ]),
                      antialiased=True,
                      extend='min')
+        
+
+
+def trace(root):
+    nodes, edges = set(), set()
+    def build(root):
+        if root not in nodes:
+            nodes.add(root)
+            for child in root._parent:
+                edges.add((child, root))
+                build(child)
+    build(root)
+    return nodes, edges
+
+def draw_dot(root, format='svg', rankdir='LR'):
+    """
+    format: png | svg | ...
+    rankdir: TB (top to bottom graph) | LR (left to right)
+    """
+    assert rankdir in ['LR', 'TB']
+    nodes, edges = trace(root)
+    dot = Digraph(format=format, graph_attr={'rankdir': rankdir}) #, node_attr={'rankdir': 'TB'})
+    
+    for n in nodes:
+        dot.node(name=str(id(n)), label = "{ %s | data %.4f | grad %.4f }" % (n.label, n.data, n.grad), shape='record')
+        if n._op:
+            dot.node(name=str(id(n)) + n._op, label=n._op)
+            dot.edge(str(id(n)) + n._op, str(id(n)))
+    
+    for n1, n2 in edges:
+        dot.edge(str(id(n1)), str(id(n2)) + n2._op)
+    
+    return dot
