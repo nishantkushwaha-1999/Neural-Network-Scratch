@@ -88,26 +88,27 @@ class Tensor:
     def __sub__(self, right):
         return self + (-right)
     
-    def __radd__(self, right):
-        return self + right
+    def __radd__(self, left):
+        return self + left
     
-    def __rsub__(self, right):
-        return (-self) + right
+    def __rsub__(self, left):
+        return (-self) + left
 
-    def __rmul__(self, right):
-        return self * right
+    def __rmul__(self, left):
+        return self * left
     
     def __truediv__(self, right):
         return self * (right ** -1)
     
-    def __rtruediv__(self, right):
-        return (self**-1) * right
+    def __rtruediv__(self, left):
+        return (self**-1) * left
 
     def backward(self):
         self.grad = 1.0
         
         topo_map = []
         visited = set()
+        
         def build_topo_map(tensor):
             if tensor not in visited:
                 visited.add(tensor)
