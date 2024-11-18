@@ -35,19 +35,29 @@ class Neuron(Module):
         super().__init__()
         self.w = np.array([Tensor(random.uniform(-1, 1), label=f"w-{suffix}-{_}") for _ in range(n_inputs)])
         self.b = Tensor(random.uniform(-1, 1), label=f"b-{suffix}")
+
+        # For Testing
+        # self.w = np.array([Tensor(1, label=f"w-{suffix}-{_}") for _ in range(n_inputs)])
+        # self.b = Tensor(1, label=f"b-{suffix}")
+
         self.activation = activation
 
         self.n_inputs = n_inputs
     
     def __call__(self, x):
-        activations = np.sum(self.w * x) + self.b
+        if type(x) == np.ndarray:
+
+            activations = np.matmul(x, self.w.T) + self.b
+            
+            if self.activation == 'lin':
+                return activations
+            elif self.activation == 'relu':
+                return np.array([i.relu() for i in activations])
+            elif self.activation == 'tanh':
+                return np.array([i.tanh() for i in activations])
         
-        if self.activation == 'lin':
-            return activations
-        elif self.activation == 'relu':
-            return activations.relu()
-        elif self.activation == 'tanh':
-            return activations.tanh()
+        else:
+            raise TypeError(f"Input data must be a {np.ndarray}. Received {type(x)}")
     
     def parameters(self):
         return list(self.w) + [self.b]
@@ -63,7 +73,7 @@ class layer_dense(Module):
         self.neurons = np.array([Neuron(n_inputs, activation, suffix=f"{suffix}-{_}") for _ in range(n_neurons)])
     
     def __call__(self, x):
-        return np.array([n(np.array(x)) for n in self.neurons])
+        return np.array([n(np.array(x)) for n in self.neurons]).T
     
     def parameters(self):
         params = []

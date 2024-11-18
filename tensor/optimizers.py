@@ -1,8 +1,8 @@
 import numpy as np
 
 class SGD():
-    def __init__(self, params, lr) -> None:
-        self.params = params
+    def __init__(self, model, lr=0.01):
+        self.params = model.parameters()
         self.lr = lr
     
     def step(self):
